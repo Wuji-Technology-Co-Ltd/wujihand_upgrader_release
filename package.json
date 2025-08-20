@@ -1,0 +1,19 @@
+{
+  "name": "wuji-upgrader-cli",
+  "version": "1.0.0",
+  "description": "Wujihand Firmware Upgrader CLI Tool",
+  "main": "run.js",
+  "scripts": {
+    "start": "node run.js",
+    "install-deps": "npm install"
+  },
+  "dependencies": {},
+  "keywords": [
+    "firmware",
+    "upgrader",
+    "cli",
+    "wujihand"
+  ],
+  "author": "Wujihand Team",
+  "license": "MIT"
+}
