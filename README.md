@@ -122,9 +122,7 @@ npm --version
 2. Ensure the `resource/` directory contains native module files
 3. Run the program using one of the methods below
 
-### Firmware Setup
-
-**Note**: Firmware files are included in the repository. If you need different versions, you can download them separately.
+### Firmware Download
 
 #### Option 1: Download from Official Repository
 ```bash
@@ -158,7 +156,7 @@ wuji-upgrader-cli/
 │   ├── JOINT_APP_v*.bin           # Joint board firmware
 │   └── SBOARD_APP_v*.bin          # Spinal board firmware
 ├── firmware_config.js              # Firmware configuration file
-├── start-release.sh                # Linux startup script
+├── start-upgrader.sh               # Linux startup script
 ├── check-deps.sh                   # Dependency check script
 ├── config.js                       # Configuration file
 └── README.md                       # This file
@@ -176,7 +174,7 @@ module.exports = {
   
   // Configure firmware for corresponding devices
   spinal_board: 'SBOARD_APP_*.bin',
-  joint_board: 'JOINT_APP_JOINT*.bin'
+  joint_board: 'JOINT_APP_*.bin'
 };
 ```
 
@@ -186,12 +184,9 @@ module.exports = {
 
 ```bash
 # Method 1: Using startup script (recommended)
-./start-release.sh
+./start-upgrader.sh
 
-# Method 2: Direct Node.js execution
-node run.js
-
-# Method 3: Setting environment variable
+# Method 2: Setting environment variable, direct Node.js execution
 export WUJI_MODE=release
 node run.js
 ```
@@ -246,14 +241,6 @@ dl 11,21,31                     # Download to specific devices using default fir
 dl all                          # Download to all supported devices using default firmware
 ```
 
-**Firmware Selection Logic:**
-- **Device 0xA0 (Spinal Board)**: Automatically selects `SBOARD_APP_*.bin`
-- **Devices 0x11-0x14 (CMC)**: Automatically selects `JOINT_APP_CMC*.bin`
-- **Devices 0x21-0x24 (MCP)**: Automatically selects `JOINT_APP_MCP*.bin`
-- **Devices 0x31-0x34 (PIP)**: Automatically selects `JOINT_APP_PIP*.bin`
-- **Devices 0x41-0x44 (DIP)**: Automatically selects `JOINT_APP_DIP*.bin`
-- **Devices 0x51-0x54 (Joint)**: Automatically selects `JOINT_APP_JOINT*.bin`
-
 **Download Process:**
 1. **Connection**: Establishes serial connection to target device(s)
 2. **Verification**: Checks device compatibility and current firmware version
@@ -265,18 +252,6 @@ dl all                          # Download to all supported devices using defaul
 
 - **`jp <id|id_range>`** - Jump to application
 - **`rb <id|id_range>`** - Reboot device
-
-### Device ID Reference
-
-- **0xA0**: Spinal Board
-- **0x11-0x14, 0x21-0x24, 0x31-0x34, 0x41-0x44, 0x51-0x54**: Joint Boards
-
-### Input ID Format
-
-- **Single device**: `11`
-- **Continuous range**: `11-14`
-- **Multiple devices**: `11,21,31`
-- **All devices**: `all`
 
 ### Examples
 
@@ -468,9 +443,24 @@ npm --version
 2. 确保 `resource/` 目录包含原生模块文件
 3. 使用以下方法之一运行程序
 
-### 固件设置
+### 目录结构
 
-**注意**：固件文件已包含在仓库中。如果您需要不同版本，可以单独下载。
+```
+wuji-upgrader-cli/
+├── run.js                          # 主程序文件
+├── resource/                       # 原生模块目录
+│   └── downloader_addon_linux_*.node
+├── firmware/                       # 固件文件目录
+│   ├── JOINT_APP_v*.bin            # 关节板通用固件
+│   └── SBOARD_APP_v*.bin           # 脊髓板固件
+├── firmware_config.js              # 固件配置文件
+├── start-upgrader.sh                # Linux启动脚本
+├── check-deps.sh                   # 依赖检查脚本
+├── config.js                       # 配置文件
+└── README.md                       # 本文件
+```
+
+### 固件下载
 
 #### 选项1：从官方仓库下载
 ```bash
@@ -492,22 +482,6 @@ cp /path/to/your/firmware/*.bin ./firmware/
 2. 下载所需的固件文件
 3. 将它们放置在 `firmware/` 目录中
 
-### 目录结构
-
-```
-wuji-upgrader-cli/
-├── run.js                          # 主程序文件
-├── resource/                       # 原生模块目录
-│   └── downloader_addon_linux_*.node
-├── firmware/                       # 固件文件目录
-│   ├── JOINT_APP_v*.bin            # 关节板通用固件
-│   └── SBOARD_APP_v*.bin           # 脊髓板固件
-├── firmware_config.js              # 固件配置文件
-├── start-release.sh                # Linux启动脚本
-├── check-deps.sh                   # 依赖检查脚本
-└── README.md                       # 本文件
-```
-
 ### 固件配置
 
 `firmware_config.js` 文件管理固件文件路径和设备映射。用户可以通过修改此文件来自定义固件选择。
@@ -520,7 +494,7 @@ module.exports = {
   
   // 配置对应设备的固件
   spinal_board: 'SBOARD_APP_*.bin',
-  joint_board: 'JOINT_APP_JOINT*.bin'
+  joint_board: 'JOINT_APP_*.bin'
 };
 ```
 
@@ -529,16 +503,10 @@ module.exports = {
 #### 启动程序
 
 ```bash
-# 方法1：使用启动器脚本（推荐）
-./wuji-upgrader
+# 方法1：使用启动脚本（推荐）
+./start-upgrader.sh
 
-# 方法2：使用启动脚本
-./start-release.sh
-
-# 方法3：直接使用Node.js运行
-node run.js
-
-# 方法4：设置环境变量
+# 方法2：设置环境变量，直接使用Node.js运行
 export WUJI_MODE=release
 node run.js
 
